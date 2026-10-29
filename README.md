@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Doodle to Code
 
 A fully offline prototype that converts either a **hand-drawn UI sketch** or a
@@ -256,3 +257,7 @@ elements host their children directly in the output HTML.
 This is a demonstration prototype built for showcasing rule-based /
 classical computer-vision techniques as an alternative to AI-based code
 generation. It is intentionally simple and not intended for production use.
+=======
+# Doodle_to_code-converter
+converting the doodle and sketches into equivalent html, css code
+>>>>>>> 34c10583ad89bf30557aee5cb85e127a18f1028a
