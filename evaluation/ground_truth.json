@@ -1,0 +1,226 @@
+[
+  {
+    "name": "single_button",
+    "description": "One isolated medium rectangle - should detect exactly one button.",
+    "file": "sketches/single_button.png",
+    "expected_components": [
+      {
+        "type": "button",
+        "x": 60,
+        "y": 70,
+        "w": 180,
+        "h": 55
+      }
+    ]
+  },
+  {
+    "name": "single_input",
+    "description": "One long thin rectangle - should detect exactly one text input.",
+    "file": "sketches/single_input.png",
+    "expected_components": [
+      {
+        "type": "input",
+        "x": 50,
+        "y": 80,
+        "w": 400,
+        "h": 45
+      }
+    ]
+  },
+  {
+    "name": "single_dropdown",
+    "description": "An input-shaped rectangle with a small triangle marker near its right edge - should detect exactly one dropdown, not a plain input.",
+    "file": "sketches/single_dropdown.png",
+    "expected_components": [
+      {
+        "type": "dropdown",
+        "x": 50,
+        "y": 80,
+        "w": 400,
+        "h": 45
+      }
+    ]
+  },
+  {
+    "name": "single_checkbox",
+    "description": "One small square - should detect exactly one checkbox.",
+    "file": "sketches/single_checkbox.png",
+    "expected_components": [
+      {
+        "type": "checkbox",
+        "x": 80,
+        "y": 80,
+        "w": 32,
+        "h": 32
+      }
+    ]
+  },
+  {
+    "name": "single_radio",
+    "description": "One circle - should detect exactly one radio button.",
+    "file": "sketches/single_radio.png",
+    "expected_components": [
+      {
+        "type": "radio",
+        "x": 82,
+        "y": 82,
+        "w": 36,
+        "h": 36
+      }
+    ]
+  },
+  {
+    "name": "nested_login_card",
+    "description": "A card containing two inputs, a checkbox, a radio, and a button - tests both detection AND containment nesting.",
+    "file": "sketches/nested_login_card.png",
+    "expected_components": [
+      {
+        "type": "card",
+        "x": 40,
+        "y": 40,
+        "w": 700,
+        "h": 510
+      },
+      {
+        "type": "input",
+        "x": 100,
+        "y": 150,
+        "w": 550,
+        "h": 45
+      },
+      {
+        "type": "input",
+        "x": 100,
+        "y": 230,
+        "w": 550,
+        "h": 45
+      },
+      {
+        "type": "checkbox",
+        "x": 100,
+        "y": 320,
+        "w": 30,
+        "h": 30
+      },
+      {
+        "type": "radio",
+        "x": 182,
+        "y": 317,
+        "w": 36,
+        "h": 36
+      },
+      {
+        "type": "button",
+        "x": 300,
+        "y": 460,
+        "w": 180,
+        "h": 50
+      }
+    ]
+  },
+  {
+    "name": "table_grid",
+    "description": "A 4x3 grid of small rectangles - should collapse into a single table component.",
+    "file": "sketches/table_grid.png",
+    "expected_components": [
+      {
+        "type": "table",
+        "x": 49,
+        "y": 49,
+        "w": 413,
+        "h": 233
+      }
+    ]
+  },
+  {
+    "name": "row_of_buttons",
+    "description": "Three buttons in a single row - a false-positive check: this should NOT become a table (grid detection requires >=2 rows).",
+    "file": "sketches/row_of_buttons.png",
+    "expected_components": [
+      {
+        "type": "button",
+        "x": 40,
+        "y": 60,
+        "w": 150,
+        "h": 50
+      },
+      {
+        "type": "button",
+        "x": 220,
+        "y": 60,
+        "w": 150,
+        "h": 50
+      },
+      {
+        "type": "button",
+        "x": 400,
+        "y": 60,
+        "w": 150,
+        "h": 50
+      }
+    ]
+  },
+  {
+    "name": "pure_scribble",
+    "description": "An irregular open freehand scribble with no closed UI shape - should be promoted to a standalone SVG shape (not silently dropped, not misclassified as a UI component).",
+    "file": "sketches/pure_scribble.png",
+    "expected_components": [
+      {
+        "type": "svg_shape",
+        "x": 47,
+        "y": 47,
+        "w": 306,
+        "h": 256
+      }
+    ]
+  },
+  {
+    "name": "mixed_with_scribble",
+    "description": "One valid button plus one irregular scribble - tests that valid shapes are still found alongside a standalone shape promoted to SVG.",
+    "file": "sketches/mixed_with_scribble.png",
+    "expected_components": [
+      {
+        "type": "button",
+        "x": 50,
+        "y": 50,
+        "w": 150,
+        "h": 50
+      },
+      {
+        "type": "svg_shape",
+        "x": 277,
+        "y": 147,
+        "w": 106,
+        "h": 156
+      }
+    ]
+  },
+  {
+    "name": "right_arrow",
+    "description": "A hand-drawn right-pointing arrow - must NOT be classified as button/checkbox/radio/table; should render as an SVG outline.",
+    "file": "sketches/right_arrow.png",
+    "expected_components": [
+      {
+        "type": "svg_shape",
+        "x": 48,
+        "y": 40,
+        "w": 235,
+        "h": 75
+      }
+    ]
+  },
+  {
+    "name": "star_shape",
+    "description": "A 5-pointed star outline - must NOT be classified as any UI component; should render as a closed SVG outline.",
+    "file": "sketches/star_shape.png",
+    "expected_components": [
+      {
+        "type": "svg_shape",
+        "x": 33,
+        "y": 28,
+        "w": 184,
+        "h": 174
+      }
+    ]
+  }
+]

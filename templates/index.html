@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Doodle to Code</title>
+
+<!-- PWA -->
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7c6ff0">
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='icons/favicon.png') }}">
+<link rel="apple-touch-icon" href="{{ url_for('static', filename='icons/apple-touch-icon.png') }}">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Doodle2Code">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+</head>
+<body>
+
+<div class="bg-scene" aria-hidden="true">
+    <div class="blob blob-a"></div>
+    <div class="blob blob-b"></div>
+</div>
+
+<!-- ============ NAVBAR ============ -->
+<header class="navbar">
+    <div class="navbar-inner">
+        <div class="brand">
+            <span class="brand-mark">
+                <i data-lucide="scan-line"></i>
+            </span>
+            <span class="brand-text">Doodle<span class="brand-accent">→</span>Code</span>
+        </div>
+        <nav class="nav-links">
+            <a href="#sketch-card">Sketch Mode</a>
+            <a href="#prompt-card">Prompt Mode</a>
+            <a href="#how-it-works">How it works</a>
+        </nav>
+        <div class="nav-status">
+            <span class="status-dot"></span> Runs 100% offline
+        </div>
+    </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero">
+    <div class="hero-copy">
+        <p class="eyebrow">Computer vision · Rule-based · No AI models</p>
+        <h1>Turn a sketch on paper<br> into a page in your browser.</h1>
+        <p class="hero-sub">
+            Draw boxes on a napkin or describe a page in plain English —
+            Doodle to Code reads the shapes or the words and assembles real HTML,
+            entirely with OpenCV contour detection and a keyword parser. No neural
+            networks, no API keys, no internet connection required.
+        </p>
+        <div class="hero-actions">
+            <a href="#sketch-card" class="btn btn-primary"><i data-lucide="pencil-ruler"></i> Try Sketch Mode</a>
+            <a href="#prompt-card" class="btn btn-ghost"><i data-lucide="type"></i> Try Prompt Mode</a>
+        </div>
+    </div>
+
+    <div class="hero-visual" aria-hidden="true">
+        <svg viewBox="0 0 460 340" class="sketch-svg">
+            <rect x="18" y="18" width="180" height="46" rx="4" class="sk-stroke sk-a"/>
+            <rect x="18" y="84" width="120" height="30" rx="4" class="sk-stroke sk-b"/>
+            <circle cx="360" cy="40" r="24" class="sk-stroke sk-c"/>
+            <rect x="18" y="140" width="424" height="180" rx="10" class="sk-stroke sk-d"/>
+            <line x1="46" y1="176" x2="220" y2="176" class="sk-stroke sk-e"/>
+            <line x1="46" y1="206" x2="260" y2="206" class="sk-stroke sk-e"/>
+            <rect x="46" y="236" width="110" height="34" rx="6" class="sk-stroke sk-f"/>
+        </svg>
+        <div class="arrow-flow">
+            <i data-lucide="arrow-right"></i>
+        </div>
+        <div class="code-chip">
+            <div class="code-chip-dots"><span></span><span></span><span></span></div>
+            <pre>&lt;button class="btn"&gt;
+  Login
+&lt;/button&gt;</pre>
+        </div>
+    </div>
+</section>
+
+<!-- ============ MODE CARDS ============ -->
+<section class="mode-grid">
+
+    <!-- ---------- SKETCH MODE CARD ---------- -->
+    <article class="mode-card" id="sketch-card">
+        <div class="mode-card-head">
+            <span class="mode-icon"><i data-lucide="image-up"></i></span>
+            <div>
+                <h2>Sketch Mode</h2>
+                <p>Upload a hand-drawn wireframe, or draw one right here, and let OpenCV detect the shapes.</p>
+            </div>
+        </div>
+
+        <div class="input-mode-toggle">
+            <button class="mode-toggle-btn active" data-input-mode="upload" id="toggle-upload">
+                <i data-lucide="upload-cloud"></i> Upload Image
+            </button>
+            <button class="mode-toggle-btn" data-input-mode="draw" id="toggle-draw">
+                <i data-lucide="pencil"></i> Draw Sketch
+            </button>
+        </div>
+
+        <!-- Upload panel -->
+        <div class="input-panel" id="panel-upload">
+            <label class="dropzone" id="dropzone" for="sketch-input">
+                <input type="file" id="sketch-input" accept=".png,.jpg,.jpeg,.bmp" hidden>
+                <i data-lucide="upload-cloud"></i>
+                <span class="dz-title">Drop your sketch here</span>
+                <span class="dz-sub">or click to browse · PNG / JPG</span>
+                <img id="sketch-preview-img" class="sketch-preview-img" hidden>
+            </label>
+        </div>
+
+        <!-- Draw panel -->
+        <div class="input-panel" id="panel-draw" hidden>
+            <div class="draw-toolbar">
+                <div class="draw-tools">
+                    <button class="tool-btn active" data-tool="rect" title="Rectangle / Button / Input">
+                        <i data-lucide="square"></i>
+                    </button>
+                    <button class="tool-btn" data-tool="square" title="Small square / Checkbox">
+                        <i data-lucide="check-square"></i>
+                    </button>
+                    <button class="tool-btn" data-tool="circle" title="Circle / Radio button">
+                        <i data-lucide="circle"></i>
+                    </button>
+                    <button class="tool-btn" data-tool="pen" title="Freehand pen">
+                        <i data-lucide="pencil"></i>
+                    </button>
+                </div>
+                <div class="draw-actions">
+                    <button class="tool-btn" id="undo-btn" title="Undo"><i data-lucide="undo-2"></i></button>
+                    <button class="tool-btn" id="clear-btn" title="Clear board"><i data-lucide="trash-2"></i></button>
+                </div>
+            </div>
+            <canvas id="draw-canvas" width="640" height="420"></canvas>
+            <p class="dz-sub draw-hint">Click a shape tool, then click and drag on the board. Use the pen for freehand outlines.</p>
+        </div>
+
+        <label class="layout-mode-toggle" for="layout-mode-checkbox">
+            <input type="checkbox" id="layout-mode-checkbox">
+            <span class="layout-mode-text">
+                <span class="layout-mode-title"><i data-lucide="layout-template"></i> Detect full website layout</span>
+                <span class="layout-mode-sub">Infer navbar, hero, features, table, sidebar &amp; footer as one semantic page instead of individual components</span>
+            </span>
+        </label>
+
+        <button class="btn btn-primary btn-block" id="sketch-generate-btn">
+            <i data-lucide="wand-2"></i> Generate HTML from Sketch
+        </button>
+
+        <div class="hint-row">
+            <i data-lucide="lightbulb"></i>
+            Rectangle → Button &nbsp;·&nbsp; Long rectangle → Input &nbsp;·&nbsp;
+            Square → Checkbox &nbsp;·&nbsp; Circle → Radio &nbsp;·&nbsp; Grid → Table &nbsp;·&nbsp;
+            Input + ▼ marker → Dropdown &nbsp;·&nbsp; Arrows/stars/custom shapes → SVG outline
+        </div>
+
+        <div id="sketch-status" class="status-line"></div>
+    </article>
+
+    <!-- ---------- PROMPT MODE CARD ---------- -->
+
+    <article class="mode-card" id="prompt-card">
+        <div class="mode-card-head">
+            <span class="mode-icon mode-icon-alt"><i data-lucide="message-square-text"></i></span>
+            <div>
+                <h2>Prompt Mode</h2>
+                <p>Describe the page you want. A keyword parser assembles it from templates.</p>
+            </div>
+        </div>
+
+        <textarea id="prompt-input" class="prompt-textarea" rows="5"
+            placeholder="e.g. Create a login page with email, password and a login button, plus a navbar and footer."></textarea>
+
+        <div class="chip-row" id="example-chips">
+            <button class="chip" data-example="Create a login page with email, password and a login button.">Login page</button>
+            <button class="chip" data-example="Build a pricing page with three pricing cards and a navbar.">Pricing page</button>
+            <button class="chip" data-example="Make a dashboard with a sidebar and a data table.">Dashboard</button>
+            <button class="chip" data-example="Create a contact form with a hero section and footer.">Contact page</button>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="prompt-generate-btn">
+            <i data-lucide="wand-2"></i> Generate HTML from Prompt
+        </button>
+
+        <div id="prompt-status" class="status-line"></div>
+    </article>
+</section>
+
+<!-- ============ RESULTS ============ -->
+<section class="results-section" id="results-section" hidden>
+    <div class="results-head">
+        <h2><i data-lucide="sparkles"></i> Generated Output</h2>
+        <div class="tabs">
+            <button class="tab-btn active" data-tab="preview">Preview</button>
+            <button class="tab-btn" data-tab="code">HTML Source</button>
+            <button class="tab-btn" data-tab="css" id="tab-css-btn" hidden>CSS</button>
+        </div>
+    </div>
+
+    <div class="detected-summary" id="detected-summary"></div>
+
+    <div class="download-row" id="download-row" hidden>
+        <a class="btn btn-ghost btn-small" id="download-html-btn" href="#" download>
+            <i data-lucide="file-down"></i> Download HTML
+        </a>
+        <a class="btn btn-ghost btn-small" id="download-css-btn" href="#" download hidden>
+            <i data-lucide="file-down"></i> Download CSS
+        </a>
+    </div>
+
+    <div class="tab-panel" id="panel-preview">
+        <iframe id="preview-frame" class="preview-frame" title="Generated page preview"></iframe>
+    </div>
+
+    <div class="tab-panel" id="panel-code" hidden>
+        <div class="code-toolbar">
+            <span id="meta-info" class="meta-info"></span>
+            <button class="btn btn-ghost btn-small" id="copy-code-btn"><i data-lucide="copy"></i> Copy code</button>
+        </div>
+        <pre class="code-block"><code id="code-output"></code></pre>
+    </div>
+
+    <div class="tab-panel" id="panel-css" hidden>
+        <div class="code-toolbar">
+            <span class="meta-info">Reusable, separate stylesheet</span>
+            <button class="btn btn-ghost btn-small" id="copy-css-btn"><i data-lucide="copy"></i> Copy CSS</button>
+        </div>
+        <pre class="code-block"><code id="css-output"></code></pre>
+    </div>
+</section>
+
+<!-- ============ HOW IT WORKS ============ -->
+<section class="how-it-works" id="how-it-works">
+    <h2>How it actually works</h2>
+    <div class="steps-grid">
+        <div class="step">
+            <span class="step-icon"><i data-lucide="scan"></i></span>
+            <h3>Classical computer vision</h3>
+            <p>Sketches are grayscaled, thresholded and passed through OpenCV contour
+            detection. Shape heuristics — aspect ratio, vertex count, circularity —
+            classify each contour, no learned model involved.</p>
+        </div>
+        <div class="step">
+            <span class="step-icon"><i data-lucide="list-tree"></i></span>
+            <h3>Keyword parsing</h3>
+            <p>Prompts are scanned for a fixed vocabulary of UI terms. Matching rules
+            decide which template blocks to combine and in what order — plain
+            pattern matching, not language generation.</p>
+        </div>
+        <div class="step">
+            <span class="step-icon"><i data-lucide="file-code-2"></i></span>
+            <h3>Template assembly</h3>
+            <p>Detected components or matched blocks are stitched into a single
+            HTML document from hand-written templates, then rendered live in
+            the preview pane.</p>
+        </div>
+    </div>
+</section>
+
+<footer class="site-footer">
+    <p>Doodle to Code — a fully offline, rule-based sketch/prompt-to-HTML prototype.</p>
+</footer>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
